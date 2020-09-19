@@ -20,7 +20,10 @@ def main():
         default=os.environ.get("FLIGHTAWARE_PASSWORD"),
     )
     parser.add_argument("--out", "-o", help="Output file name", metavar="OUTFILE")
-    parser.add_argument("target", help="Aircraft registration or flight number", )
+    parser.add_argument(
+        "target",
+        help="Aircraft registration or flight number",
+    )
     args = parser.parse_args()
     if not (args.username and args.password):
         parser.print_usage()
@@ -51,7 +54,7 @@ def main():
             r_tracks, r_airports = parse_kml(response)
         tracks += r_tracks
         for name, el in r_airports.items():
-            if name not in airports:
+            if name != " Airport" and name not in airports:
                 airports[name] = el
         reqs += 1
         if reqs % 5 == 0:
@@ -59,7 +62,9 @@ def main():
             sys.stdout.flush()
     if reqs >= 5:
         print()
-    write_kml(outfile, tracks + list(airports.values()))
+    write_kml(
+        outfile, tracks + list(airports.values()), f"Flight track log for {args.target}"
+    )
     print(f"{reqs} flight tracks written to {outfile}")
 
 

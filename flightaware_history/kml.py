@@ -1,4 +1,5 @@
 import typing
+
 from lxml import etree
 
 
@@ -22,17 +23,17 @@ def parse_kml(
     tracks = []
     parsed = etree.parse(file, etree.XMLParser(remove_blank_text=True))
     root = parsed.xpath(".")[0]
+    _, _, title = xpath(root, "kml:Document/kml:name")[0].text.partition(" ✈ ")
     for track in xpath(root, "//gx:Track/parent::*"):
-        for name in xpath(track, "kml:name"):
-            for desc in xpath(track, "kml:description"):
-                name.text = f"{desc.text} - {name.text}"
-                if label:
-                    name.text = f"{label} - {name.text}"
+        name = xpath(track, "kml:name")[0]
+        name.text = title
+        if label:
+            name.text = f"{label} - {name.text}"
         tracks.append(track)
     for airport in xpath(root, "//kml:Point/parent::*"):
-        for name in xpath(airport, "kml:name"):
-            if name.text not in airports:
-                airports[name.text] = airport
+        name = xpath(airport, "kml:name")[0]
+        if name.text not in airports:
+            airports[name.text] = airport
     return tracks, airports
 
 
@@ -47,12 +48,11 @@ def write_kml(
     root = template.xpath(".")[0]
     out_doc = xpath(root, "//kml:Document")[0]
     if title:
-        for name in xpath(template, "kml:name"):
-            name.text = title
+        xpath(root, "kml:Document/kml:name")[0].text = title
     for el in placemarks:
         out_doc.append(el)
     with open(filename, "wb") as outfile:
-        outfile.write(etree.tostring(root))
+        outfile.write(etree.tostring(root, xml_declaration=True))
 
 
 default_template = b"""\
