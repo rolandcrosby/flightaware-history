@@ -26,7 +26,7 @@ def main():
     )
     args = parser.parse_args()
     if not (args.username and args.password):
-        parser.print_usage()
+        print("--username or $FLIGHTAWARE_USERNAME and --password or $FLIGHTAWARE_PASSWORD are required")
         parser.exit()
 
     if args.out:
@@ -65,7 +65,7 @@ def main():
     write_kml(
         outfile, tracks + list(airports.values()), f"Flight track log for {args.target}"
     )
-    print(f"{reqs} flight tracks written to {outfile}")
+    print(f"{reqs} flight track logs written to {outfile}")
 
 
 if __name__ == "__main__":
