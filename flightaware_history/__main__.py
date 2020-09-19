@@ -19,8 +19,8 @@ def main():
         help="FlightAware password [$FLIGHTAWARE_PASSWORD]",
         default=os.environ.get("FLIGHTAWARE_PASSWORD"),
     )
-    parser.add_argument("--out", "-o", help="Output file name")
-    parser.add_argument("target", help="Aircraft registration or flight number")
+    parser.add_argument("--out", "-o", help="Output file name", metavar="OUTFILE")
+    parser.add_argument("target", help="Aircraft registration or flight number", )
     args = parser.parse_args()
     if not (args.username and args.password):
         parser.print_usage()
