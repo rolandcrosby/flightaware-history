@@ -5,6 +5,7 @@ Just a little utility that downloads the track log files for a given aircraft (o
 ## Usage
 
 ```
+$ pip install flightaware-history-rolandcrosby
 $ export FLIGHTAWARE_USERNAME='...@example.com'
 $ export FLIGHTAWARE_PASSWORD='...'
 $ flightaware-history N744ST
