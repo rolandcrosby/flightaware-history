@@ -1,6 +1,4 @@
-import os
 import re
-import sys
 import typing
 
 import mechanicalsoup
@@ -43,23 +41,3 @@ def get_all_history(browser: mechanicalsoup.StatefulBrowser, target: str):
         more_urls, next_page = get_history_page(browser, target, offset=next_page)
         urls += more_urls
     return urls
-
-
-def main():
-    def usage():
-        print(f"Usage: {os.path.basename(sys.argv[0])} <registration or flight number>")
-        exit(1)
-
-    try:
-        username = os.environ["FLIGHTAWARE_USERNAME"]
-        password = os.environ["FLIGHTAWARE_PASSWORD"]
-        target = sys.argv[1]
-    except KeyError:
-        print(f"FLIGHTAWARE_USERNAME and FLIGHTAWARE_PASSWORD must be set")
-        usage()
-    except IndexError:
-        usage()
-    browser = login(username, password)
-    urls = get_all_history(browser, target)
-    for url in urls:
-        print(url)

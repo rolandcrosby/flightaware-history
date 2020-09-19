@@ -14,7 +14,7 @@ def xpath(el: etree.ElementTree, path: str) -> typing.List[etree.ElementTree]:
 
 def parse_kml(
     file, label: str = None
-) -> typing.Tuple[typing.List[etree.ElementTree], typing.List[etree.ElementTree]]:
+) -> typing.Tuple[typing.List[etree.ElementTree], typing.Dict[str, etree.ElementTree]]:
     """
     Parse a stream of KML data to lists of tracks and airports as Placemark nodes.
     """
@@ -33,7 +33,7 @@ def parse_kml(
         for name in xpath(airport, "kml:name"):
             if name.text not in airports:
                 airports[name.text] = airport
-    return tracks, airports.values()
+    return tracks, airports
 
 
 def write_kml(
@@ -43,7 +43,7 @@ def write_kml(
     template: str = None,
 ):
     if not template:
-        template = default_template
+        template = etree.fromstring(default_template)
     root = template.xpath(".")[0]
     out_doc = xpath(root, "//kml:Document")[0]
     if title:
@@ -55,7 +55,7 @@ def write_kml(
         outfile.write(etree.tostring(root))
 
 
-default_template = """\
+default_template = b"""\
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
 <Document>
